@@ -32,9 +32,8 @@ public class Software_Cliente extends JFrame implements ActionListener {
 	private JTextArea txtLog;
 	private JLabel lblCamera, lblIsOnline;
 	private JTextField ip;
-	private int re = 0, yello = 0, gree = 0, isOnline = 5;
-	private String Binario, isOn = "5";
-	private boolean estado = false;
+	private int re = 0, yello = 0, gree = 0, isOnline = 0;
+	private String Binario;
 	// private JLabel led000 = new JLabel(new
 	// ImageIcon(getClass().getResource("/imagenes/0001.jpg")));
 	// private JLabel led001 = new JLabel(new
@@ -83,7 +82,7 @@ public class Software_Cliente extends JFrame implements ActionListener {
 		splog.setPreferredSize(new Dimension(255, 116));
 
 		ip = new JTextField("127.0.0.1", 37);
-		btnIP = new JButton("Cambiar IP");
+		btnIP = new JButton("Connectar");
 
 		btnR.setPreferredSize(new Dimension(250, 35));
 		lblCamera = new JLabel("CAM: disabled");
@@ -141,25 +140,6 @@ public class Software_Cliente extends JFrame implements ActionListener {
 		lblIsOnline.setBackground(new Color(255, 0, 0));
 
 		setVisible(true);
-		// iniciarServicio();
-		while (true) {
-
-			if (isOnline >= 5) {
-				System.out.println(isOnline);
-				lblIsOnline.setBackground(new Color(255, 0, 0));
-				lblIsOnline.setText("Server is OFFLine");
-			} else if (isOnline < 5) {
-				System.out.println(isOnline);
-				lblIsOnline.setBackground(new Color(0, 255, 0));
-				lblIsOnline.setText("Server is ONLine");
-				isOnline++;
-			}
-			try {
-				Thread.sleep(1000);
-
-			} catch (InterruptedException e) {
-			}
-		}
 
 	}
 
@@ -168,13 +148,19 @@ public class Software_Cliente extends JFrame implements ActionListener {
 		Object boton = arg0.getSource();
 
 		if (boton == btnIP) {
-			isOnline = 0;
+			isOnline = 1;
 			direccionIP = ip.getText();
 			txtLog.append("\n\nConectando a " + direccionIP);
 		}
-		if (isOnline >= 5) {
-			txtLog.append("El servidor no está conectado.\n");
-		} else if (isOnline < 5) {
+		if (isOnline == 0) {
+			lblIsOnline.setBackground(new Color(255, 0, 0));
+			lblIsOnline.setText("Server is OFFLine");
+			txtLog.append("\nEl servidor no está conectado.\n");
+		}
+		if (isOnline == 1) {
+
+			lblIsOnline.setBackground(new Color(0, 255, 0));
+			lblIsOnline.setText("Server is ONLine");
 
 			// // // // // // // // // // // // // // // //
 			if (re == 0 && boton == btnR) {
@@ -248,13 +234,15 @@ public class Software_Cliente extends JFrame implements ActionListener {
 		try {
 
 			socket = new Socket();
-			socket.connect(new InetSocketAddress(direccionIP, 5000), 5000);
-
+			socket.connect(new InetSocketAddress(direccionIP, 5000), 1000);
 			salida = new PrintStream(socket.getOutputStream());
 			salida.println(mensaje);
 
-		} catch (IOException e) {
-			txtLog.append("\n Dirección IP no responde o no existe...\n\n");
+		} catch (Exception e) {
+			isOnline = 0;
+			txtLog.append("\nEl servidor no está conectado.");
+			lblIsOnline.setBackground(new Color(255, 0, 0));
+			lblIsOnline.setText("Server is OFFLine");
 		} finally {
 			salida.close();
 			try {
@@ -267,35 +255,4 @@ public class Software_Cliente extends JFrame implements ActionListener {
 
 	}
 
-	public void enLinea(String isOnline) {
-		this.isOnline = Integer.valueOf(isOnline);
-	}
-
-	// private void iniciarServicio() {
-	//
-	// EstadoServer es1 = new EstadoServer();
-	// ServerSocket socketServidor1 = null;
-	// try {
-	// socketServidor1 = new ServerSocket(5001);
-	//
-	// Socket sCliente;
-	// while (true) {
-	//
-	// sCliente = socketServidor1.accept();
-	//
-	// // Nuevo Hilo //
-	// Thread hilo = new Thread(new EstadoServer(sCliente, this));
-	//
-	// hilo.start();
-	//
-	// isOnline = Integer.valueOf(es1.getIsOnline());
-	//
-	// Thread.sleep(100);
-	//
-	// }
-	// } catch (IOException | InterruptedException e) {
-	//
-	// e.printStackTrace();
-	// }
-	// }
 }
