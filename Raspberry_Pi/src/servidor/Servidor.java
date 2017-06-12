@@ -17,6 +17,12 @@ import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 
+import com.pi4j.io.gpio.GpioController;
+import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.PinState;
+import com.pi4j.io.gpio.RaspiPin;
+
 public class Servidor extends JFrame {
 
 	private JTextArea txtArea;
@@ -24,6 +30,16 @@ public class Servidor extends JFrame {
 	private JLabel lblAmarillo;
 	private JLabel lblRojo;
 	private String mensaje;
+	// crear controlador gpio //
+	private final GpioController gpioControlador = GpioFactory.getInstance();
+
+	// Selección de controlador GPIO (PIN) temporal
+	private final GpioPinDigitalOutput pin07 = gpioControlador.provisionDigitalOutputPin(RaspiPin.GPIO_07, "MyLEDGreen",
+			PinState.LOW);
+	private final GpioPinDigitalOutput pin11 = gpioControlador.provisionDigitalOutputPin(RaspiPin.GPIO_11,
+			"MyLEDYellow", PinState.LOW);
+	private final GpioPinDigitalOutput pin13 = gpioControlador.provisionDigitalOutputPin(RaspiPin.GPIO_13, "MyLEDRed",
+			PinState.LOW);
 
 	public Servidor() {
 		super("Servidor - Casa Domótica");
@@ -31,6 +47,11 @@ public class Servidor extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new FlowLayout());
 		setResizable(false);
+
+		// Asignar la posibilidad de desactivar el GPIO (PIN)
+		// pin07.setShutdownOptions(true, PinState.LOW);
+		// pin11.setShutdownOptions(true, PinState.LOW);
+		// pin13.setShutdownOptions(true, PinState.LOW);
 
 		// JPanels //
 		JPanel panelSuperior = new JPanel();
@@ -115,34 +136,58 @@ public class Servidor extends JFrame {
 
 	public void cambiarColor(String mensaje) {
 		if (mensaje.equals("000")) {
+			pin07.low();
+			pin11.low();
+			pin13.low();
 			lblVerde.setBackground(new Color(255, 200, 200));
 			lblAmarillo.setBackground(new Color(255, 200, 200));
 			lblRojo.setBackground(new Color(255, 200, 200));
 		} else if (mensaje.equals("001")) {
+			pin07.high();
+			pin11.low();
+			pin13.low();
 			lblVerde.setBackground(new Color(200, 255, 200));
 			lblAmarillo.setBackground(new Color(255, 200, 200));
 			lblRojo.setBackground(new Color(255, 200, 200));
 		} else if (mensaje.equals("010")) {
+			pin07.low();
+			pin11.high();
+			pin13.low();
 			lblVerde.setBackground(new Color(255, 200, 200));
 			lblAmarillo.setBackground(new Color(200, 255, 200));
 			lblRojo.setBackground(new Color(255, 200, 200));
 		} else if (mensaje.equals("011")) {
+			pin07.high();
+			pin11.high();
+			pin13.low();
 			lblVerde.setBackground(new Color(200, 255, 200));
 			lblAmarillo.setBackground(new Color(200, 255, 200));
 			lblRojo.setBackground(new Color(255, 200, 200));
 		} else if (mensaje.equals("100")) {
+			pin07.low();
+			pin11.low();
+			pin13.high();
 			lblVerde.setBackground(new Color(255, 200, 200));
 			lblAmarillo.setBackground(new Color(255, 200, 200));
 			lblRojo.setBackground(new Color(200, 255, 200));
 		} else if (mensaje.equals("101")) {
+			pin07.high();
+			pin11.low();
+			pin13.high();
 			lblVerde.setBackground(new Color(200, 255, 200));
 			lblAmarillo.setBackground(new Color(255, 200, 200));
 			lblRojo.setBackground(new Color(200, 255, 200));
 		} else if (mensaje.equals("110")) {
+			pin07.low();
+			pin11.high();
+			pin13.high();
 			lblVerde.setBackground(new Color(255, 200, 200));
 			lblAmarillo.setBackground(new Color(200, 255, 200));
 			lblRojo.setBackground(new Color(200, 255, 200));
 		} else if (mensaje.equals("111")) {
+			pin07.high();
+			pin11.high();
+			pin13.high();
 			lblVerde.setBackground(new Color(200, 255, 200));
 			lblAmarillo.setBackground(new Color(200, 255, 200));
 			lblRojo.setBackground(new Color(200, 255, 200));
