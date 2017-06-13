@@ -36,9 +36,9 @@ public class Servidor extends JFrame {
 	// Selección de controlador GPIO (PIN) temporal
 	private final GpioPinDigitalOutput pin07 = gpioControlador.provisionDigitalOutputPin(RaspiPin.GPIO_07, "MyLEDGreen",
 			PinState.LOW);
-	private final GpioPinDigitalOutput pin11 = gpioControlador.provisionDigitalOutputPin(RaspiPin.GPIO_11,
+	private final GpioPinDigitalOutput pin11 = gpioControlador.provisionDigitalOutputPin(RaspiPin.GPIO_00,
 			"MyLEDYellow", PinState.LOW);
-	private final GpioPinDigitalOutput pin13 = gpioControlador.provisionDigitalOutputPin(RaspiPin.GPIO_13, "MyLEDRed",
+	private final GpioPinDigitalOutput pin13 = gpioControlador.provisionDigitalOutputPin(RaspiPin.GPIO_02, "MyLEDRed",
 			PinState.LOW);
 
 	public Servidor() {
